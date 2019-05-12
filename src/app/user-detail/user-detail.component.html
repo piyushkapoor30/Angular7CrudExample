@@ -1,0 +1,135 @@
+<!--  ADD POPUP ON CLICK OF ADD BUTTON  -->
+<div class="modal fade" id="userAddEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" *ngIf=!isNewRecord> Edit {{user.firstName}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel" *ngIf=isNewRecord>Add User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form name="form" #f="ngForm" novalidate="novalidate">
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-4">
+                <label><b>First Name :</b></label>
+              </div>
+              <div class="col-sm-8">
+                <input [(ngModel)]="user.firstName" #firstName="ngModel"
+                  [ngClass]="{'is-invalid': firstName.invalid && onClickValidation }" class="form-control"
+                  name="firstName" required>
+                <div *ngIf="firstName.invalid && onClickValidation" class="invalid-feedback">
+                  <div *ngIf="firstName.errors.required">First Name is required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-4">
+                <label><b>Last Name :</b></label>
+              </div>
+              <div class="col-sm-8">
+                <input [(ngModel)]="user.lastName" #lastName="ngModel"
+                  [ngClass]="{'is-invalid': lastName.invalid && onClickValidation }" class="form-control"
+                  name="lastName" required>
+                <div *ngIf="lastName.invalid && onClickValidation" class="invalid-feedback">
+                  <div *ngIf="lastName.errors.required">Last Name is required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-4">
+                <label><b>Email :</b></label>
+              </div>
+              <div class="col-sm-8">
+                <input [(ngModel)]="user.email" #email="ngModel"
+                  [ngClass]="{ 'is-invalid': email.invalid && onClickValidation}" class="form-control" name="email"
+                  type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required>
+                <div *ngIf="email.invalid && onClickValidation" class="invalid-feedback">
+                  <div *ngIf="email.errors.required">Email is required</div>
+                  <div [hidden]="!email.errors?.pattern">Email must be a valid email address</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-4">
+                <label> <b>Country:</b></label>
+              </div>
+              <div class="col-sm-8">
+                <select [(ngModel)]="user.country" class="custom-select" name="country">
+                  <option *ngFor="let country of countries">{{country}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" type="submit" class="btn btn-primary" (click)="addUser(f)" *ngIf="isNewRecord"> Add
+              User</button>
+            <button type="button" class="btn btn-primary" (click)="onUpdate(f)"
+              *ngIf="!isNewRecord">Update</button>
+            <button type="button" class="btn btn-danger" (click)="onClose()">Close</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!--CREATION OF WHOLE DATA TABLE OF USER  -->
+<div class="container">
+  <div class="row">
+    <div class="col-sm-10">
+      <!--SEARCH BOX   -->
+      <input class="form-control search-Box" type="text" placeholder="Search..." [(ngModel)]="filter">
+    </div>
+
+    <!--ADD BUTTON  -->
+    <div class="col-sm-2">
+      <button type="button" (click)="onclickAdd()" class="btn btn-primary add-button" data-toggle="modal"
+        data-target="#userAddEditModal">Add</button>
+    </div>
+  </div>
+</div>
+
+<!--TABLE WITH DATA -->
+<div class="container">
+  <div class="row">
+    <table class="table table-striped table-hover table-bordered">
+      <thead>
+        <th>Sr. No</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email Address</th>
+        <th>Country</th>
+        <th>Action</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users|filter:filter| paginate: { itemsPerPage: 6, currentPage: p }; let i = index">
+          <td>{{i+1}}</td>
+          <td>{{user?.firstName}}</td>
+          <td>{{user?.lastName}}</td>
+          <td> {{user?.email}}</td>
+          <td> {{user?.country}}</td>
+          <a><i class="fa fa-edit" id="edit" (click)="onclickEdit(user)" data-toggle="modal"
+              data-target="#userAddEditModal"></i></a>
+          <i class="fa fa-trash" (click)="deleteUser(user.id)"></i>
+        </tr>
+        <tr *ngIf="users?.length == 0">
+          <td colspan="6" class="text-center">
+            <span><b><i>No Records Available</i></b></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>

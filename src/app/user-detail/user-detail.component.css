@@ -1,0 +1,33 @@
+.modal {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+}
+
+.add-button {
+    margin-left: 114px;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.search-Box {
+    margin-left: -15px;
+    width: 1045px;
+    margin-top: 50px;
+    border: 1px solid black;
+}
+
+.pagination {
+    margin-left:800px;
+}
+
+.fa-trash {
+    color: red;
+    padding-left: 10px;
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+.fa-edit {
+    padding-left: 25px;
+    font-size: 20px;
+}
